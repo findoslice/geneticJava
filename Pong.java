@@ -50,11 +50,17 @@ public class Pong extends JFrame {
 
     protected Controller leftController, rightController;
 
+    public int generation;
+
+    public Movement leftMove, rightMove;
+
+    public ArrayList<Double> inputs;
+
     
 
 
     public Pong(Controller leftController, Controller rightController) {
-        this.fps = 40;
+        this.fps = 300;
         this.windowHeight = 450;
         this.windowWidth = 650;
         this.isRunning = true;
@@ -75,10 +81,12 @@ public class Pong extends JFrame {
         this.xballspeed = 5;
         this.yballspeed = 0;
 
-        this.rands = new ArrayList<Integer>(Arrays.asList(-1,-1,-1,-1,-1,-1,-1,-1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1));
+        this.rands = new ArrayList<Integer>(Arrays.asList(-1,-1,-1,-1,-1,-1,-1,-1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1));
 
         this.leftController = leftController;
         this.rightController = rightController;
+
+        this.generation = 0;
 
 
         //this.backBuffer;
@@ -100,6 +108,7 @@ public class Pong extends JFrame {
             this.update();
             Controller champion = this.normalise();
             if (champion != null){
+                this.setVisible(false);
                 return champion;
             }
             this.draw();
@@ -139,6 +148,10 @@ public class Pong extends JFrame {
 
     }
 
+    public void yeet(){
+        this.setVisible(false); 
+    }
+
     public void update() {
         ArrayList<Double> inputs = new ArrayList<Double>(Arrays.asList((Double)(this.v1/1.0),
                                                                        (Double)(this.v2/1.0), 
@@ -146,7 +159,7 @@ public class Pong extends JFrame {
                                                                        (Double)(this.yball/1.0), 
                                                                        (Double)(this.xballspeed/1.0),
                                                                        (Double)(this.yballspeed/1.0)));
-        System.out.println(inputs);
+        //System.out.println(inputs);
         Movement leftMove = this.leftController.chooseMovement(inputs);
         if (leftMove == Movement.UP && (v1 - paddlespeed > 0)){
             v1 -= paddlespeed;
@@ -243,13 +256,17 @@ public class Pong extends JFrame {
             yball = windowHeight;
             yballspeed = -1*yballspeed;
         }
-        if (count1 >9 || count2 > 9){
-            fps = 120;                                
+        if (count1 > 9 || count2 > 9){
+            fps = 1000;                                
         }
         if (count1 >=10){
+            count1 = 0;
+            count2 = 0;
             return this.leftController;
         }
         if (count2 >= 10){
+            count1 = 0;
+            count2 = 0;
             return this.rightController;
         }
         xball += xballspeed;
@@ -266,9 +283,8 @@ public class Pong extends JFrame {
         bbg.fillRect(0, 0, this.windowWidth, this.windowHeight); 
 
         bbg.setColor(Color.GREEN);
-        bbg.drawString(Integer.toString(this.count1), this.windowWidth/15, this.windowHeight/10);
+        bbg.drawString(Integer.toString(this.generation), this.windowWidth/15, this.windowHeight/10);
         bbg.fillRect(this.windowWidth/15, v1, 20, 100); 
-        bbg.drawString(Integer.toString(this.count2), 14*this.windowWidth/15, this.windowHeight/10);
         bbg.fillRect(14*this.windowWidth/15, v2, 20, 100); 
         bbg.setColor(Color.GREEN);
         bbg.fillOval(xball, yball, 40, 40); 

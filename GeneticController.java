@@ -8,11 +8,14 @@ public class GeneticController extends Controller {
 
     public Double fitness;
     public Double learningRate;
+    public int stationaryCount, totalCount;
     public ArrayList<Integer> topology;
     public ArrayList<ArrayList<Node>> nodes;
 
     public GeneticController(ArrayList<Integer> topology, Double learningRate){
         this.fitness = 0.00;
+        this.stationaryCount = 0;
+        this.totalCount = 0;
         this.learningRate = learningRate;
         this.topology = topology;
         this.populate();
@@ -47,8 +50,8 @@ public class GeneticController extends Controller {
                 outputValues.get(i).add(this.nodes.get(i-1).get(j).getValue(outputValues.get(i-1)));
             }
         }
-        System.out.println(this.nodes);
-        System.out.println(outputValues);
+        //System.out.println(this.nodes);
+        //System.out.println(outputValues);
         int maxIndex = 0;
         for (int i = 1; i < topology.get(topology.size()-1); i++){
             if (outputValues.get(outputValues.size()-1).get(i) > outputValues.get(outputValues.size()-1).get(maxIndex)){
@@ -57,19 +60,31 @@ public class GeneticController extends Controller {
         }
         switch (maxIndex){
             case 0:
+                this.totalCount++;
                 return Movement.UP;
             case 2:
+                this.totalCount++;
                 return Movement.DOWN;
             default:
+                this.totalCount++;
+                this.stationaryCount++;
                 return Movement.NONE;
+        }
+    }
+
+    public void mutate(){
+        for (int i = 0; i < this.nodes.size(); i++){
+            for (int j = 0; j < this.nodes.get(i).size(); j++){
+                this.nodes.get(i).get(j).mutate();
+            }
         }
     }
 
     public void setFitness(Double ourScore, Double theirScore){
         if (theirScore > 0){
-            this.fitness = ourScore/2;
+            this.fitness = ourScore/2 - (this.stationaryCount/this.totalCount>0.85?100:0);
         }
-        this.fitness = ourScore/theirScore;
+        this.fitness = ourScore/theirScore - (this.stationaryCount/this.totalCount>0.85?100:0);
     }
     public Double getFitness(){
         return this.fitness;
