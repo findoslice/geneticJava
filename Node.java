@@ -27,7 +27,7 @@ public class Node{
     public Double getValue(ArrayList<Double> inputs) {
         Double sum = 0.0;
         for (int i = 0; i < inputs.size(); i++){
-            sum += coefficients.get(i)*inputs.get(i)-biases.get(i);
+            sum += (Double)(coefficients.get(i)*inputs.get(i) - biases.get(i));
         }
         return sum;
     }

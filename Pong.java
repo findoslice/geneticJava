@@ -14,40 +14,41 @@ import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
 // Main class
 
 public class Pong extends JFrame {
 
-    private int fps;
-    private int windowHeight;
-    private int windowWidth;
-    private boolean isRunning;
+    protected int fps;
+    protected int windowHeight;
+    protected int windowWidth;
+    protected boolean isRunning;
 
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
 
-    private int v1;
-    private int v2;
+    protected int v1;
+    protected int v2;
 
-    private int paddlespeed;
+    protected int paddlespeed;
 
-    private int count1;
-    private int count2;
+    protected int count1;
+    protected int count2;
 
-    private int xball;
-    private int yball;
-    private int xballspeed;
-    private int yballspeed;
+    protected int xball;
+    protected int yball;
+    protected int xballspeed;
+    protected int yballspeed;
 
-    private ArrayList<Integer> rands;
+    protected ArrayList<Integer> rands;
 
 
-    private BufferedImage backBuffer;
-    private Insets insets;
+    protected BufferedImage backBuffer;
+    protected Insets insets;
 
-    private InputHandler input;
+    //protected InputHandler input;
 
-    private Controller leftController, rightController;
+    protected Controller leftController, rightController;
 
     
 
@@ -83,11 +84,11 @@ public class Pong extends JFrame {
         //this.backBuffer;
         //this.insets;
 
-        this.input = new InputHandler(this);
+        //this.input = new InputHandler(this);
 
     }
 
-    public void run() {
+    public Controller run() {
 
         this.initialize();
 
@@ -97,7 +98,10 @@ public class Pong extends JFrame {
 
             
             this.update();
-            this.normalise();
+            Controller champion = this.normalise();
+            if (champion != null){
+                return champion;
+            }
             this.draw();
 
             time = (1000 / fps) - (System.currentTimeMillis() - time);
@@ -113,7 +117,7 @@ public class Pong extends JFrame {
         }
 
         this.setVisible(false);
-
+        return null;
     }
 
     public void initialize() {
@@ -136,12 +140,12 @@ public class Pong extends JFrame {
     }
 
     public void update() {
-        ArrayList<Double> inputs = new ArrayList<Double>(Arrays.asList((Double)(this.v1*1.0),
-                                                                       (Double)(this.v2*1.0), 
-                                                                       (Double)(this.xball*1.0), 
-                                                                       (Double)(this.yball*1.0), 
-                                                                       (Double)(this.xballspeed*1.0),
-                                                                       (Double)(this.yballspeed*1.0)));
+        ArrayList<Double> inputs = new ArrayList<Double>(Arrays.asList((Double)(this.v1/1.0),
+                                                                       (Double)(this.v2/1.0), 
+                                                                       (Double)(this.xball/1.0), 
+                                                                       (Double)(this.yball/1.0), 
+                                                                       (Double)(this.xballspeed/1.0),
+                                                                       (Double)(this.yballspeed/1.0)));
         System.out.println(inputs);
         Movement leftMove = this.leftController.chooseMovement(inputs);
         if (leftMove == Movement.UP && (v1 - paddlespeed > 0)){
@@ -182,32 +186,34 @@ public class Pong extends JFrame {
         } */ 
     }
 
-    public void normalise(){
+    public Controller normalise(){
         if (xball <= 55 && xball >= (55 - windowWidth/15) && (yball > v1 - 25 && yball < v1 + 100)){
             xballspeed = Math.abs(xballspeed)+rands.get((int)Math.random()*rands.size());
             yballspeed += (int)Math.round(2.0*((yball - (v1+50))/50));
-            if(input.isKeyDown(KeyEvent.VK_9)) {
+            /*if(input.isKeyDown(KeyEvent.VK_9)) {
                 yballspeed -= 1;
             }
             if(input.isKeyDown(KeyEvent.VK_8)) {
                 yballspeed += 1;
-            }
+            }*/
         }
         if (xball >= 568 && (xball <= 568 + windowWidth/15) && (yball > v2 - 25 && yball < v2 + 100)){
             xballspeed = -1*Math.abs(xballspeed)-rands.get((int)Math.random()*rands.size());
-            yballspeed += (int)Math.round(2.0*(yball - (v2+50))/50);
-            if(input.isKeyDown(KeyEvent.VK_9)) {
+            yballspeed += 10*(int)Math.round(2.0*(yball - (v2+50))/50);
+           /*if(input.isKeyDown(KeyEvent.VK_9)) {
                 yballspeed -= 1;
             }
             if(input.isKeyDown(KeyEvent.VK_8)) {
                 yballspeed += 1;
-            }
+            }*/
         }
         if (xball < 0){
             xball = windowWidth/2;
             yball = windowHeight/2;
             yballspeed = 0;
             xballspeed = -5;
+            //this.v1 = windowHeight/2 - 50;
+            //this.v2 = windowHeight/2 - 50;
             count2++;
             System.out.print("Player 1 score: ");
             System.out.print(count1);
@@ -220,6 +226,8 @@ public class Pong extends JFrame {
             yball = windowHeight/2;
             yballspeed = 0;
             xballspeed = 5;
+            //this.v1 = windowHeight/2 - 50;
+            //this.v2 = windowHeight/2 - 50;
             count1++;
             System.out.print("Player 1 score: ");
             System.out.print(count1);
@@ -238,14 +246,15 @@ public class Pong extends JFrame {
         if (count1 >9 || count2 > 9){
             fps = 120;                                
         }
-        if (count1 >=10 || count2 >= 10){
-            fps = 60;
-            count1 = 0;
-            count2 = 0;                                
+        if (count1 >=10){
+            return this.leftController;
+        }
+        if (count2 >= 10){
+            return this.rightController;
         }
         xball += xballspeed;
         yball += yballspeed;
-      
+        return null;
     }
 
     public void draw() {

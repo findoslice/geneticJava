@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.lang.Math;
 
+
 public class GeneticController extends Controller {
 
 
@@ -14,6 +15,10 @@ public class GeneticController extends Controller {
         this.fitness = 0.00;
         this.learningRate = learningRate;
         this.topology = topology;
+        this.populate();
+    }
+
+    public void populate(){
         this.nodes = new ArrayList<ArrayList<Node>>();
         ArrayList<Node> layer = new ArrayList<Node>();
         //this.nodes.add(0, layer);
