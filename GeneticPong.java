@@ -16,10 +16,12 @@ import java.util.ArrayList;
 
 public class GeneticPong extends Pong{
 
-    public GeneticPong(){
-        super();
+    private Controller left, right;
+
+    public GeneticPong(Controller left, Controller right){
+        super(left, right);
+        this.left = left;
+        this.right = right;
     }
-    public static void main(String[] args){
-        run();
-    }
+
 }

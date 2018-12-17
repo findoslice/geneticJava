@@ -1,29 +1,46 @@
-import java.uitl.ArrayList;
+import java.util.ArrayList;
 import java.lang.Math;
 
 public class Node{
 
     public ArrayList<Double> biases;
-    String type;
-    public Double value;
+    public Double learningRate;
+    private Integer previousLayer;
     public ArrayList<Double> coefficients;
 
-    public Node(int previousLayer){
+    public Node(int previousLayer, Double learningRate){
         this.biases = new ArrayList<Double>();
-        this.type = "hidden";
+        this.learningRate = learningRate;
+        this.previousLayer = previousLayer;
         this.coefficients = new ArrayList<Double>();
-        for (int i = 0; i < previousLayer; i++){
-            this.biases.set(i, Math.random());
-            this.coefficients.set(i, Math.Random());
-        }
+        //extracted(previousLayer);
     }
 
 
-    public Double getValue(ArrayList<Double> inputs){
-        Double sum = 0;
+	public void initialise() {
+        for (int i = 0; i < this.previousLayer; i++) {
+            this.biases.add(i, Math.random());
+            this.coefficients.add(i, Math.random());
+        }
+    }
+
+    public Double getValue(ArrayList<Double> inputs) {
+        Double sum = 0.0;
         for (int i = 0; i < inputs.size(); i++){
             sum += coefficients.get(i)*inputs.get(i)-biases.get(i);
         }
         return sum;
+    }
+
+    public Node mutate(){
+        for (int i = 0; i < this.biases.size(); i++){
+            if (Math.random() <= this.learningRate){
+                this.biases.set(i, this.biases.get(i) + ((((Math.random()*1000)-500)%100)/1000));
+            }
+            if (Math.random() <= this.learningRate){
+                this.coefficients.set(i, this.coefficients.get(i) + ((((Math.random()*1000)-500)%100)/1000));
+            }
+        }
+        return this;
     }
 }

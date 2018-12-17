@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.imageio.ImageIO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 // Main class
 
@@ -46,11 +47,13 @@ public class Pong extends JFrame {
 
     private InputHandler input;
 
+    private Controller leftController, rightController;
+
     
 
 
-    public Pong() {
-        this.fps = 60;
+    public Pong(Controller leftController, Controller rightController) {
+        this.fps = 40;
         this.windowHeight = 450;
         this.windowWidth = 650;
         this.isRunning = true;
@@ -71,8 +74,10 @@ public class Pong extends JFrame {
         this.xballspeed = 5;
         this.yballspeed = 0;
 
-        this.rands = new ArrayList<Integer>();
-        this.rands.add(0, 0);
+        this.rands = new ArrayList<Integer>(Arrays.asList(-1,-1,-1,-1,-1,-1,-1,-1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1));
+
+        this.leftController = leftController;
+        this.rightController = rightController;
 
 
         //this.backBuffer;
@@ -131,7 +136,30 @@ public class Pong extends JFrame {
     }
 
     public void update() {
-        if(input.isKeyDown(KeyEvent.VK_2)) {
+        ArrayList<Double> inputs = new ArrayList<Double>(Arrays.asList((Double)(this.v1*1.0),
+                                                                       (Double)(this.v2*1.0), 
+                                                                       (Double)(this.xball*1.0), 
+                                                                       (Double)(this.yball*1.0), 
+                                                                       (Double)(this.xballspeed*1.0),
+                                                                       (Double)(this.yballspeed*1.0)));
+        System.out.println(inputs);
+        Movement leftMove = this.leftController.chooseMovement(inputs);
+        if (leftMove == Movement.UP && (v1 - paddlespeed > 0)){
+            v1 -= paddlespeed;
+        }
+        else if (leftMove == Movement.DOWN && (v1 + paddlespeed < windowHeight - 50)){
+                v1 += paddlespeed;
+        }
+
+        Movement rightMove = this.rightController.chooseMovement(inputs);
+        if (rightMove == Movement.UP && (v2 - paddlespeed > 0)){
+            v2 -= paddlespeed;
+        }
+        else if (rightMove == Movement.DOWN && (v2 + paddlespeed < windowHeight - 50)){
+                v2 += paddlespeed;
+        }
+
+        /*if(input.isKeyDown(KeyEvent.VK_2)) {
             if (v1 - paddlespeed > 0){
                 v1 -= paddlespeed;
             }
@@ -151,7 +179,7 @@ public class Pong extends JFrame {
             if (v2 + paddlespeed < windowHeight - 50 ){
                 v2 += paddlespeed;
             }
-        }  
+        } */ 
     }
 
     public void normalise(){
