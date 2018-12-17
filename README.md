@@ -1,18 +1,4 @@
-![alt text](https://github.com/Roxerg/java-engine/blob/master/banner.png "CLAW")
+## Genetic Java
 
-2D game engine in vanialla Java.
-
-## features
-- walking!
-- shooting!
-- particles
-- level editor
-
-## TODO
-- fix sprite animations
-- improve enemy pathfinding
-- implement lose state
-- implement HUD
-- finish the actual game
-- tidy up code
+A shitty old pong game I wrote (based on (rokas')[https://github.com/roxerg] skeleton of a game engine) I've cleaned up and am adding genetic learning to - stay tuned for more!
 
