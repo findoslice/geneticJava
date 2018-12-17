@@ -153,13 +153,13 @@ public class Pong extends JFrame {
     }
 
     public void update() {
-        ArrayList<Double> inputs = new ArrayList<Double>(Arrays.asList((Double)(this.v1/1.0),
-                                                                       (Double)(this.v2/1.0), 
-                                                                       (Double)(this.xball/1.0), 
-                                                                       (Double)(this.yball/1.0), 
-                                                                       (Double)(this.xballspeed/1.0),
-                                                                       (Double)(this.yballspeed/1.0)));
-        //System.out.println(inputs);
+        ArrayList<Double> inputs = new ArrayList<Double>(Arrays.asList((Double)((this.v1*1.0/windowHeight*1.0)*1.0),
+                                                                       (Double)((this.v2*1.0/windowHeight*1.0)*1.0), 
+                                                                       (Double)((this.xball*1.0/windowWidth*1.0)*1.0), 
+                                                                       (Double)((this.yball*1.0/windowHeight*1.0)*1.0), 
+                                                                       (Double)(this.xballspeed*1.0/5.0-1.0),
+                                                                       (Double)(this.yballspeed*1.0/3.0)));
+        System.out.println(inputs);
         Movement leftMove = this.leftController.chooseMovement(inputs);
         if (leftMove == Movement.UP && (v1 - paddlespeed > 0)){
             v1 -= paddlespeed;

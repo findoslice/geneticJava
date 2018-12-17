@@ -9,7 +9,7 @@ public class RunPong{
     private static ArrayList<GeneticController> generation = new ArrayList<GeneticController>();
     private static ArrayList<GeneticController> champions = new ArrayList<GeneticController>();
     private static int genCount;
-    private static GeneticController left;
+    private static Controller left;
     private static GeneticController right;
     public static Pong pong;
 
@@ -32,7 +32,7 @@ public class RunPong{
 
     public static void main(String[] args){
         topology = new ArrayList<Integer>(Arrays.asList(6,5,3));
-        for (int k = 0; k < 50; k++){
+        for (int k = 0; k < 500; k++){
             genCount = 0;
             generation = new ArrayList<GeneticController>();
             if (champions == null || champions.size() == 0){
@@ -58,8 +58,12 @@ public class RunPong{
                 }
             }
             champions = new ArrayList<GeneticController>();
-            left = generation.get(genCount);
-            genCount++;
+            if (k < 8){
+                left = generation.get(genCount);
+                genCount++;
+            } else{
+                left = new BossMode();
+            }
             right = generation.get(genCount);
             genCount++;
             //System.out.println(genCount);

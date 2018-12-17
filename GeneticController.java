@@ -62,7 +62,7 @@ public class GeneticController extends Controller {
             case 0:
                 this.totalCount++;
                 return Movement.UP;
-            case 2:
+            case 1:
                 this.totalCount++;
                 return Movement.DOWN;
             default:
@@ -82,9 +82,9 @@ public class GeneticController extends Controller {
 
     public void setFitness(Double ourScore, Double theirScore){
         if (theirScore > 0){
-            this.fitness = ourScore/2 - (this.stationaryCount/this.totalCount>0.85?100:0);
+            this.fitness = ourScore - ((this.stationaryCount*1.0)/(this.totalCount*1.0)>0.7?100:0);
         }
-        this.fitness = ourScore/theirScore - (this.stationaryCount/this.totalCount>0.85?100:0);
+        this.fitness = ourScore/theirScore - ((this.stationaryCount*1.0)/(this.totalCount*1.0)>0.7?100:0);
     }
     public Double getFitness(){
         return this.fitness;

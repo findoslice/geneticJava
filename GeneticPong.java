@@ -28,12 +28,14 @@ public class GeneticPong extends Pong{
     }
 
     public Controller normalise(){
-        ArrayList<Double> inputs = new ArrayList<Double>(Arrays.asList((Double)(this.v1/1.0),
-                                                                       (Double)(this.v2/1.0), 
-                                                                       (Double)(this.xball/1.0), 
-                                                                       (Double)(this.yball/1.0), 
-                                                                       (Double)(this.xballspeed/1.0),
-                                                                       (Double)(this.yballspeed/1.0)));
+        ArrayList<Double> inputs = new ArrayList<Double>(Arrays.asList((Double)(this.v1/(1.0*this.windowHeight)),
+                                                                       (Double)(this.v2/(1.0*this.windowHeight)), 
+                                                                       (Double)(this.xball/(1.0*this.windowWidth)), 
+                                                                       (Double)(this.yball/(1.0*this.windowHeight)), 
+                                                                       (Double)(this.xballspeed/5.0-1.0),
+                                                                       (Double)(this.yballspeed/2.0),
+                                                                       this.windowHeight*1.0,
+                                                                       this.windowWidth*1.0));
         if (xball <= 55 && xball >= (55 - windowWidth/15) && (yball > v1 - 25 && yball < v1 + 100)){
             xballspeed = Math.abs(xballspeed)+rands.get((int)Math.random()*rands.size());
             yballspeed += (int)(Math.random()*3.0-1.5);
@@ -117,10 +119,14 @@ public class GeneticPong extends Pong{
             fps = 300;
             count1 = 0;
             count2 = 0;
-            if (count2 != 0){
-                left.setFitness(count1/1.0, count2/1.0);
-            } else {
-                left.setFitness(count1/1.0, 2.0);
+            if (left instanceof GeneticController){
+                if (count2 != 0){
+                    left.setFitness(count1/1.0, count2/1.0);
+                } else {
+                    left.setFitness(count1/1.0, 2.0);
+                }
+            } else{
+                left.setFitness(count2/1.0, count1/1.0);
             }
             return left;
         }
@@ -129,9 +135,9 @@ public class GeneticPong extends Pong{
             count1 = 0;
             count2 = 0;
             if (count1 != 0){
-                left.setFitness(count2/1.0, count1/1.0);
+                right.setFitness(count2/1.0, count1/1.0);
             } else {
-                left.setFitness(count2/1.0, 2.0);
+                right.setFitness(count2/1.0, 2.0);
             }
             return right;
         }
